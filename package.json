@@ -24,8 +24,7 @@
   "author": "Aditya Sharma <adityaksharma@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "motion": ">=11.0.0"
+    "react": ">=16.8.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.0",

@@ -3,7 +3,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import typescript from '@rollup/plugin-typescript'
 import dts from 'rollup-plugin-dts'
 
-const packageJson = require('./package.json')
+import packageJson from './package.json' with { type: 'json' }
 
 export default [
   {
@@ -30,7 +30,7 @@ export default [
         exclude: ['**/*.test.*', '**/*.stories.*'],
       }),
     ],
-    external: ['react', 'react-dom', 'motion/react'],
+    external: ['react', 'react-dom'],
   },
   {
     input: 'dist/index.d.ts',

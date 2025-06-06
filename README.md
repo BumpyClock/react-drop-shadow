@@ -1,6 +1,6 @@
 # React Drop Shadow
 
-A highly customizable React component for applying drop shadows with elevation-based layered shadows and optional Framer Motion animations. Built following Josh Comeau's shadow design principles for realistic depth perception.
+A highly customizable React component for applying drop shadows with elevation-based layered shadows and CSS transitions. Built following Josh Comeau's shadow design principles for realistic depth perception.
 
 ## Installation
 
@@ -10,10 +10,10 @@ npm install @your-username/react-drop-shadow
 
 ## Peer Dependencies
 
-Make sure you have the required peer dependencies installed:
+Make sure you have React installed:
 
 ```bash
-npm install react motion
+npm install react
 ```
 
 ## Usage
@@ -133,25 +133,137 @@ function ElevationWithInner() {
 }
 ```
 
-## Preset Components
-
-The library includes several preset components for common use cases:
+### State-Based Shadows with Config
 
 ```tsx
-import { 
-  FloatingNavShadow, 
-  CardShadow, 
-  ButtonShadow, 
-  PipShadow 
-} from '@your-username/react-drop-shadow'
+import { DropShadow, DropShadowConfig, shadowPresets } from '@your-username/react-drop-shadow'
 
-function Presets() {
+// Using global config for consistent behavior
+function App() {
+  return (
+    <DropShadowConfig {...shadowPresets.card}>
+      <div className="card-section">
+        <DropShadow currentState="auto">
+          <Card /> {/* Automatically detects hover/active/focus states */}
+        </DropShadow>
+        
+        <DropShadow currentState="hover">
+          <Card /> {/* Always shows hover state */}
+        </DropShadow>
+      </div>
+    </DropShadowConfig>
+  )
+}
+
+// Using inline states
+function CustomStates() {
+  const [isAnimating, setIsAnimating] = useState(false)
+  
+  return (
+    <DropShadow
+      states={{
+        default: { elevation: 2 },
+        hover: { elevation: 4 },
+        active: { elevation: 1 },
+        animating: { elevation: 6, blur: 1.2 }
+      }}
+      currentState={isAnimating ? 'animating' : 'auto'}
+      transition={{ duration: 0.3 }}
+    >
+      <AnimatedCard />
+    </DropShadow>
+  )
+}
+
+// Using shadow presets
+function PresetExample() {
   return (
     <>
-      <FloatingNavShadow>
-        <nav>Navigation with large shadow and inner shadow</nav>
-      </FloatingNavShadow>
+      <DropShadow config="card">
+        <ProductCard />
+      </DropShadow>
       
+      <DropShadow config={shadowPresets.button}>
+        <button>Action</button>
+      </DropShadow>
+      
+      <DropShadow 
+        config="modal"
+        currentState="entering"
+      >
+        <Modal />
+      </DropShadow>
+    </>
+  )
+}
+```
+
+### Hook Usage for Advanced Cases
+
+```tsx
+import { useDropShadow } from '@your-username/react-drop-shadow'
+
+function AdvancedComponent() {
+  const { shadowStyle, currentState, setDetectedState } = useDropShadow({
+    config: 'card',
+    states: {
+      loading: { elevation: 0, opacity: 0.5 },
+      error: { elevation: 4, color: 'red' }
+    },
+    currentState: isLoading ? 'loading' : 'auto'
+  })
+  
+  return (
+    <div style={shadowStyle}>
+      Current state: {currentState}
+    </div>
+  )
+}
+```
+
+## Shadow Presets
+
+The library includes built-in shadow configurations for common UI patterns:
+
+```tsx
+import { shadowPresets } from '@your-username/react-drop-shadow'
+
+// Available presets:
+// - card: Standard card elevation with hover/active states
+// - button: Interactive button with focus state
+// - modal: High elevation for overlays
+// - floating: Medium elevation with animation states
+
+// Define custom presets
+const customPresets = {
+  toast: {
+    states: {
+      default: { elevation: 8 },
+      entering: { elevation: 4 },
+      exiting: { elevation: 12 }
+    },
+    transition: { duration: 0.2 }
+  }
+}
+
+// Use in DropShadowConfig
+<DropShadowConfig presets={customPresets}>
+  <DropShadow config="toast">
+    <Toast />
+  </DropShadow>
+</DropShadowConfig>
+```
+
+## Legacy Preset Components
+
+For backward compatibility:
+
+```tsx
+import { CardShadow, ButtonShadow } from '@your-username/react-drop-shadow'
+
+function LegacyPresets() {
+  return (
+    <>
       <CardShadow>
         <div>Card with medium shadow</div>
       </CardShadow>
@@ -159,10 +271,6 @@ function Presets() {
       <ButtonShadow>
         <button>Animated button with small shadow</button>
       </ButtonShadow>
-      
-      <PipShadow>
-        <div>Small element with inner shadow</div>
-      </PipShadow>
     </>
   )
 }
@@ -180,9 +288,34 @@ function Presets() {
 | `color` | `'default' \| 'purple' \| 'blue' \| 'white'` | `'default'` | Color variant of the shadow |
 | `innerShadow` | `boolean` | `false` | Whether to add an inner shadow |
 | `animated` | `boolean` | `false` | Whether to animate on hover |
+| `config` | `ShadowConfig \| string` | - | Shadow configuration object or preset name |
+| `states` | `Record<string, ShadowStateConfig>` | - | State-based shadow configurations |
+| `currentState` | `string \| 'auto'` | `'auto'` | Current shadow state (auto detects hover/active/focus) |
+| `transition` | `TransitionConfig` | - | Custom transition configuration (duration in ms, ease as CSS function) |
 | `className` | `string` | `''` | Additional CSS classes |
 | `style` | `CSSProperties` | `{}` | Additional inline styles |
-| `...motionProps` | `HTMLMotionProps<"div">` | - | Any additional Framer Motion props |
+| `...props` | `HTMLAttributes<HTMLDivElement>` | - | Any additional HTML div props |
+
+### DropShadowConfig Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Components that will inherit the shadow config |
+| `states` | `Record<string, ShadowStateConfig>` | - | State configurations to apply |
+| `transition` | `TransitionConfig` | - | Default transition for all shadows (duration in ms, ease as CSS function) |
+| `autoDetect` | `boolean` | `true` | Enable automatic state detection |
+| `presets` | `Record<string, ShadowConfig>` | - | Custom preset configurations |
+
+### ShadowStateConfig
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `elevation` | `number` | Elevation level for this state |
+| `color` | `ShadowColor` | Shadow color for this state |
+| `size` | `ShadowSize` | Legacy size for this state |
+| `opacity` | `number` | Opacity multiplier (0-1) |
+| `blur` | `number` | Blur multiplier (default: 1) |
+| `innerShadow` | `boolean \| string` | Inner shadow configuration |
 
 ### Elevation System
 
@@ -253,6 +386,27 @@ When multiple shadow props are provided, they're applied in this priority:
 1. `elevation` (highest priority - uses layered box-shadows)
 2. `color` (colored filter-based shadows)
 3. `size` (legacy size-based filter shadows)
+
+## Hook API
+
+### useDropShadow
+
+```tsx
+const { shadowStyle, currentState, setDetectedState, states } = useDropShadow({
+  config?: ShadowConfig | string,
+  states?: Record<string, ShadowStateConfig>,
+  currentState?: string,
+  elevation?: number,
+  size?: ShadowSize,
+  color?: ShadowColor
+})
+```
+
+Returns:
+- `shadowStyle`: CSS properties object with filter and boxShadow
+- `currentState`: The current active state
+- `setDetectedState`: Function to manually set detected state
+- `states`: Merged state configurations
 
 ## Migration from Size to Elevation
 
