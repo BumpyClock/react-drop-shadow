@@ -1,7 +1,7 @@
 {
-  "name": "@your-username/react-drop-shadow",
-  "version": "1.0.0",
-  "description": "A customizable React component for applying drop shadows with Framer Motion animations",
+  "name": "@bumpyclock/react-drop-shadow",
+  "version": "0.1.0",
+  "description": "A customizable React component for applying rich layered drop shadows based on the elevation",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
