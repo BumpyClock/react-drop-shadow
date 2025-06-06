@@ -229,21 +229,13 @@ export const DropShadow: React.FC<DropShadowProps> = ({
   )
 }
 
-// Export specific presets for common use cases
-export const FloatingNavShadow: React.FC<Omit<DropShadowProps, 'size' | 'innerShadow'>> = (props) => (
-  <DropShadow size="lg" innerShadow {...props} />
-)
-
+// Export basic presets for common use cases
 export const CardShadow: React.FC<Omit<DropShadowProps, 'size'>> = (props) => (
   <DropShadow size="md" {...props} />
 )
 
 export const ButtonShadow: React.FC<Omit<DropShadowProps, 'size' | 'animated'>> = (props) => (
   <DropShadow size="sm" animated {...props} />
-)
-
-export const PipShadow: React.FC<Omit<DropShadowProps, 'size' | 'innerShadow'>> = (props) => (
-  <DropShadow size="sm" innerShadow {...props} />
 )
 
 // Helper function to combine multiple filter values
