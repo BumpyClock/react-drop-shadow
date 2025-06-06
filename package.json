@@ -1,0 +1,47 @@
+{
+  "name": "@your-username/react-drop-shadow",
+  "version": "1.0.0",
+  "description": "A customizable React component for applying drop shadows with Framer Motion animations",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "drop-shadow",
+    "shadow",
+    "framer-motion",
+    "animation",
+    "ui",
+    "component"
+  ],
+  "author": "Aditya Sharma <adityaksharma@gmail.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "motion": ">=11.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/react": "^18.0.0",
+    "rollup": "^4.0.0",
+    "rollup-plugin-dts": "^6.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bumpyclock/react-drop-shadow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bumpyclock/react-drop-shadow/issues"
+  },
+  "homepage": "https://github.com/bumpyclock/react-drop-shadow#readme"
+}
